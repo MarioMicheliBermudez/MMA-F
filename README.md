@@ -18,7 +18,7 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 
-* Mario
+* 
 * Cross Site Scripting (XSS)
 * Command Injection
 * Insecure Direct Object References (IDOR)
