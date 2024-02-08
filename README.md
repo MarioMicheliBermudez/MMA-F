@@ -45,15 +45,15 @@
 
 1. Clone the repo
    ```sh
-    git clone https://github.com/Yavuzlar/VulnLab
+    git clone https://github.com/MarioMicheliBermudez/MMA-F
    ```
 2. Build docker image
    ```sh
-    docker build -t yavuzlar/vulnlab .
+    docker build -t MarioMicheliBermudez/MMA-F .
    ```
 3. Run container
    ```sh
-    docker run -d -p 1337:80 yavuzlar/vulnlab
+    docker run -d -p 1337:80 MarioMicheliBermudez/MMA-F
    ```
 4. Go to http://localhost:1337
 
