@@ -18,7 +18,6 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 Hola
-* 
 * Cross Site Scripting (XSS)
 * Command Injection
 * Insecure Direct Object References (IDOR)
