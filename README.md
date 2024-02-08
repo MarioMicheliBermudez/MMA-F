@@ -18,7 +18,7 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 Hola
-* 
+* mario
 * Cross Site Scripting (XSS)
 * Command Injection
 * Insecure Direct Object References (IDOR)
