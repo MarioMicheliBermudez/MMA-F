@@ -18,7 +18,7 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 
-* tostus
+* mario gay
 * SQL Injection
 * Cross Site Scripting (XSS)
 * Command Injection
