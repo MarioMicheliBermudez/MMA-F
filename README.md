@@ -18,7 +18,6 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 
-* mario gay
 * SQL Injection
 * Cross Site Scripting (XSS)
 * Command Injection
