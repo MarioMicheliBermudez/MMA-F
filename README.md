@@ -18,6 +18,7 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 
+* tostus
 * SQL Injection
 * Cross Site Scripting (XSS)
 * Command Injection
