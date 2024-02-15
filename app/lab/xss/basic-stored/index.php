@@ -43,7 +43,7 @@ if (isset($_POST['uname']) && isset($_POST['passwd'])) {
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
 
-  <title><?php echo $strings['title']; ?></title>
+  <title><?php echo htmlspecialchars($strings['title']); ?></title>
 </head>
 
 <body>
@@ -71,7 +71,7 @@ if (isset($_POST['uname']) && isset($_POST['passwd'])) {
 
     </div>
   </div>
-  <script id="VLBar" title="<?= $strings['title'] ?>" category-id="1" src="/public/assets/js/vlnav.min.js"></script>
+  <script id="VLBar" title="<?= htmlspecialchars($strings['title']) ?>" category-id="1" src="/public/assets/js/vlnav.min.js"></script>
 </body>
 
 </html>
