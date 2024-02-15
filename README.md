@@ -17,17 +17,17 @@
 
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
-* SQL Injection
-* Cross Site Scripting (XSS)
+* SQL Injection (Mario)
+* Cross Site Scripting (XSS) ✅
 * Command Injection
 * Insecure Direct Object References (IDOR)
 * Cross Site Request Forgery (CSRF)
-* XML External Entity (XXE)
+* XML External Entity (XXE) ✅
 * Insecure Deserialization
 * File Upload
-* File Inclusion
-* Broken Authentication
-* Race Condition
+* File Inclusion (Marc)
+* Broken Authentication (Ferran)
+* Race Condition (Adrià)
 * Server Side Template Injection (SSTI)
 
 <!-- Installation -->

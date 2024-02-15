@@ -41,10 +41,10 @@ $strings = tr();
         <div class="alert alert-success col-md-5 mb-lg-5" id="answer" role="alert" style="text-align: center;"></div>
     </div>';
         echo '<script>';
-        echo 'var height = '.$_GET['height'].';';
-        echo 'var base = '.$_GET['base'].';';
+        echo 'var height = ' . htmlspecialchars($_GET['height']) . ';';
+        echo 'var base = ' . htmlspecialchars($_GET['base']) . ';';
         echo 'var ans = base * height / 2;';
-        echo 'document.getElementById("answer").innerHTML = "'.$strings['alert'].' "+ans;';
+        echo 'document.getElementById("answer").innerHTML = "'.htmlspecialchars($strings['alert']).' " + ans;';
         echo '</script>';
     }
     ?>

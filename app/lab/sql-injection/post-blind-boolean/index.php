@@ -1,30 +1,29 @@
 <?php
-
 require("../../../lang/lang.php");
 $strings = tr();
 
 $db = new PDO('mysql:host=localhost; dbname=sql_injection', 'sql_injection', '');
 
+$result = "";
+
 if (isset($_POST['search'])) {
     $search = $_POST['search'];
 
-
     try {
-        $query = $db->prepare("SELECT * FROM stocks WHERE name = '" . $search . "'");
+        $query = $db->prepare("SELECT * FROM stocks WHERE name = :search");
+        $query->bindParam(':search', $search, PDO::PARAM_STR);
+        $query->execute();
+        $list = $query->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($list['name'])) {
+            $result = "true";
+        } else {
+            $result = "false";
+        }
     } catch (PDOException $e) {
-    }
-    $query->execute();
-    $list = $query->fetch(PDO::FETCH_ASSOC);
-
-
-    if (!empty($list['name'])) {
-        $result = "true";
-    } else {
-        $result = "false";
+        echo "Error: " . $e->getMessage();
     }
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +37,6 @@ if (isset($_POST['search'])) {
 </head>
 
 <body>
-
     <div class="container d-flex justify-content-center flex-column">
         <div class="header-wrapper d-flex justify-content-center" style="margin-top: 20vh;">
             <h1><?php echo $strings['header'] ?></h1>
@@ -63,7 +61,6 @@ if (isset($_POST['search'])) {
             </form>
         </div>
         <?php
-
         if (!empty($result)) {
             if ($result == "true") {
                 echo '<div class="alert-div d-flex justify-content-center mt-5">
@@ -74,7 +71,6 @@ if (isset($_POST['search'])) {
             } else {
                 echo '<div class="alert-div d-flex justify-content-center mt-5">
                         <div class="alert alert-danger text-center" style="width: 500px;" role="alert">';
-                    
                 echo $strings['failed'];
                 echo '</div>
                     </div>';

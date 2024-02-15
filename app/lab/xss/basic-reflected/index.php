@@ -24,7 +24,7 @@ $strings = tr();
     if (isset($_GET['q'])) {
       $q = $_GET['q'];
       echo '<div class="alert alert-danger" style="margin-top: 30vh;" role="alert" >';
-      echo '' . $strings['text'] . ' <b>' . $q . '</b> ';
+      echo '' . $strings['text'] . ' <b>' . htmlspecialchars($q) . '</b> ';
       echo '<a href="index.php" ">' . $strings['try'] . '</a>';
       echo "</div>";
     } else {
