@@ -18,11 +18,11 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 * SQL Injection
-* Cross Site Scripting (XSS)
+* Cross Site Scripting (XSS) ✅
 * Command Injection
 * Insecure Direct Object References (IDOR)
 * Cross Site Request Forgery (CSRF)
-* XML External Entity (XXE)
+* XML External Entity (XXE) ✅
 * Insecure Deserialization
 * File Upload
 * File Inclusion
