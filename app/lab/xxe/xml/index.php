@@ -31,7 +31,7 @@
 function xmlLoad(){
   var xhttp = new XMLHttpRequest();
  
-  xhttp.open("POST", "test.php", "true");
+  xhttp.open("POST", "test.php", false);
   xhttp.setRequestHeader("Content-type","text/xml; charset=UTF-8");
   xhttp.send( `
   <city><title>Karabuk</title><amount>293</amount></city>`);
