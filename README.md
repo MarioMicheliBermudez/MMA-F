@@ -37,7 +37,7 @@
 
 1. If you want to install on DockerHub, just type this command.
    ```sh
-    docker run --name vulnlab -d -p 1337:80 yavuzlar/vulnlab:latest
+    docker run --name vulnlab -d -p 1337:80 MarioMicheliBermudez/MMA-F:latest
    ```
 2. Go to http://localhost:1337
 
