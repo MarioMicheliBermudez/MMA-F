@@ -17,7 +17,7 @@
 
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
-* SQL Injection
+* SQL Injection (Mario)
 * Cross Site Scripting (XSS) ✅
 * Command Injection
 * Insecure Direct Object References (IDOR)
@@ -26,7 +26,7 @@
 * Insecure Deserialization
 * File Upload
 * File Inclusion
-* Broken Authentication
+* Broken Authentication (Ferran)
 * Race Condition
 * Server Side Template Injection (SSTI)
 
