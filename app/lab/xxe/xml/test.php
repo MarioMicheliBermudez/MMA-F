@@ -1,11 +1,13 @@
 <?php
-  libxml_disable_entity_loader (false);
+// $xmlfile = file_get_contents('php://input');
+$xmlfile = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents('php://input'); // Considera la compatibilidad con ciertas configuraciones
 
-  $xmlfile = file_get_contents('php://input');
-  $dom = new DOMDocument();
+$dom = new DOMDocument();
 
-  $dom->loadXML($xmlfile, LIBXML_NOENT);
-
-echo $dom->textContent;
-
+if ($xmlfile) {
+    $dom->loadXML($xmlfile);
+    echo $dom->textContent;
+} else {
+    echo "No se recibió XML válido.";
+}
 ?>
