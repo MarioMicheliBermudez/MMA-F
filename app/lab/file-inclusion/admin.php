@@ -1,1 +1,5 @@
-<?php echo $strings['admin']; ?>
+<?php
+$strings = array(
+    'admin' => 'Administrador',
+);
+?>
