@@ -11,27 +11,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars($_POST['email']);
     $tel = htmlspecialchars($_POST['tel']);
 
+    // Iniciar la transacción
+    $db->beginTransaction();
 
-        //Check: Is there a registration with the same email??
-        $kontrolSql = "SELECT * FROM kayit WHERE email = '$email'";
-        $kontrolSonuc = $db->query($kontrolSql);
-        $results = $kontrolSonuc->fetchAll(PDO::FETCH_ASSOC);
-        if (count($results) > 0) {
-            // A registration with the same email has been found, issue a warning..
-            echo $strings['warning'];              //Registration failed: An account with the registered email already exists.!
+    // Verificar si ya existe un registro con el mismo correo electrónico
+    $kontrolSql = "SELECT * FROM kayit WHERE email = '$email' FOR UPDATE";
+    $kontrolSonuc = $db->query($kontrolSql);
+    $results = $kontrolSonuc->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($results) > 0) {
+        // Se encontró un registro con el mismo correo electrónico, emitir una advertencia.
+        echo $strings['warning']; // ¡Registro fallido: ya existe una cuenta con el correo electrónico registrado!
+    } else {
+        // No existe un registro con el mismo correo electrónico, agregarlo.
+        $ekleSql = "INSERT INTO kayit (ad, soyad, email, tel) VALUES ('$ad', '$soyad', '$email', '$tel')";
+
+        if ($db->exec($ekleSql)) {
+            echo $strings['successful']; // ¡Registro completado!
         } else {
-            // No registration with the same email exists, add it.
-            $ekleSql = "INSERT INTO kayit (ad, soyad, email, tel) VALUES ('$ad', '$soyad', '$email', '$tel')";
-
-            if ($db->exec($ekleSql)) {
-                echo $strings['successful'];       //registration completed!
-            } else {
-                echo $strings['unsuccessful'];     //registration failed.
-            }
+            echo $strings['unsuccessful']; // ¡Registro fallido!
         }
+    }
 
-    $db = null;
+    // Confirmar la transacción
+    $db->commit();
 }
+
 
 
 
