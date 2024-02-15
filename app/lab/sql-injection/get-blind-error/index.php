@@ -27,7 +27,7 @@ if (isset($_POST['prev'])) {
     header("Location: index.php?img=" . $_GET['img'] . "");
     exit;
 }
-
+ 
 if (isset($_GET['img'])) {
     $img = $_GET['img'];
 
