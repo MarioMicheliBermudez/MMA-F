@@ -21,7 +21,7 @@
 * Cross Site Scripting (XSS) ✅
 * Command Injection (ferran)
 * Insecure Direct Object References (IDOR)
-* Cross Site Request Forgery (CSRF)
+* Cross Site Request Forgery (CSRF) (Marc)
 * XML External Entity (XXE) ✅
 * Insecure Deserialization
 * File Upload (Mario)
