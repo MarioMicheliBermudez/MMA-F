@@ -17,7 +17,7 @@
 
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
-* SQL Injection (Mario)
+* SQL Injection ✅
 * Cross Site Scripting (XSS) ✅
 * Command Injection
 * Insecure Direct Object References (IDOR)
