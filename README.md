@@ -28,7 +28,7 @@
 * File Inclusion (Marc)
 * Broken Authentication (Ferran)
 * Race Condition ✅
-* Server Side Template Injection (SSTI)
+* Server Side Template Injection (SSTI) (Adrià)
 
 <!-- Installation -->
 ## Installation
