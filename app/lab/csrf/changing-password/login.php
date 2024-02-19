@@ -1,40 +1,33 @@
 <?php
-    // Login Page
-    session_start();
+session_start();
 
-    if( isset($_SESSION['authority']) ){
+if (isset($_SESSION['authority'])) {
+    header("Location: index.php");
+    exit;
+}
+
+$db = new PDO('sqlite:database.db');
+
+require("../../../lang/lang.php");
+$strings = tr();
+
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = stripslashes($_POST['username']);
+    $password = stripslashes($_POST['password']);
+
+    $select = $db->prepare("SELECT * FROM csrf_changing_password WHERE authority=:authority AND password=:password");
+    $select->execute(array('authority' => $username, 'password' => $password));
+    $_select = $select->fetch();
+
+    if ($_select) {
+        $_SESSION['authority'] = $username;
         header("Location: index.php");
         exit;
+    } else {
+        $status = "unsuccess";
     }
-
-    $db = new PDO('sqlite:database.db');
-
-    require("../../../lang/lang.php");
-    $strings = tr();
-
-    if( isset($_POST['username']) && isset($_POST['password']) ){
-
-        $username = stripslashes($_POST['username']);
-        $password = stripslashes($_POST['password']);
-
-
-        $select = $db -> prepare("SELECT * FROM csrf_changing_password WHERE authority=:authority AND password=:password");
-        $select -> execute(array('authority' => $username,'password' => $password));
-        $_select = $select -> fetch();
-
-        if( isset($_select['id']) ){
-            $_SESSION['authority'] = $username;
-            header("Location: index.php");
-            exit;
-        }else{
-            $status = "unsuccess";
-        }
-
-
-    }
-
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="<?= $strings['lang']; ?>">
@@ -73,30 +66,15 @@
 
                     <div class="card border-primary mb-3">
                         <div class="card-header text-primary">
-
-                        <?php
-                            $selectUser = $db -> prepare("SELECT * FROM csrf_changing_password WHERE authority=:authority");
-                            $selectUser -> execute(array('authority' => "user"));
-                            $selectUser_Password = $selectUser -> fetch();
-                        ?>
-
-                        <?= $strings['card_username']; ?> <b>user</b>
-                        <br>
-                        <?= $strings['card_password']; ?> <b> <?= $selectUser_Password['password']?> </b>
-
+                            <?= $strings['card_username']; ?> <b>user</b>
+                            <br>
+                            <?= $strings['card_password']; ?> <b>*****</b>
                         </div>
                     </div>
 
-
                     <?php
-                    if( isset($status) ){
-
-                        if($status == "unsuccess"){
-                            echo '<div class="alert alert-danger mt-2" role="alert">'
-                            .$strings['login_unsuccess'].
-                            '</div>';
-                        }
-
+                    if (isset($status) && $status == "unsuccess") {
+                        echo '<div class="alert alert-danger mt-2" role="alert">' . $strings['login_unsuccess'] . '</div>';
                     }
                     ?>
 
@@ -109,7 +87,7 @@
                                 placeholder="<?= $strings['login_input_username_label']; ?>" required>
 
                             <label for="password" class="form-label mt-2"><?= $strings['login_input_password']; ?></label>
-                            <input class="form-control" type="text" name="password" id="password"
+                            <input class="form-control" type="password" name="password" id="password"
                                 placeholder="<?= $strings['login_input_password_label']; ?>" required>
                         </div>
                         <div class="d-grid gap-2">
@@ -124,10 +102,9 @@
         </div>
 
     </div>
-    
-    
+
     <script id="VLBar" title="<?= $strings['title']; ?>" category-id="8" src="/public/assets/js/vlnav.min.js"></script>
-    
+
 </body>
 
 </html>
