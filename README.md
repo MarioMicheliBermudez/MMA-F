@@ -25,7 +25,7 @@
 * XML External Entity (XXE) ✅
 * Insecure Deserialization
 * File Upload (Mario)
-* File Inclusion (Marc)
+* File Inclusion ✅ xd
 * Broken Authentication ✅/falta 1
 * Race Condition ✅
 * Server Side Template Injection (SSTI) (Adrià)
