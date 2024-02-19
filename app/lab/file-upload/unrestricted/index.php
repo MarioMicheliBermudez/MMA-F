@@ -12,7 +12,11 @@
                 mkdir("uploads");
             }
     
-            $uploadPath = "uploads/".$fileName;
+            // Escapar el nombre del archivo para evitar la inyección de código
+            $fileName = htmlspecialchars($fileName);
+    
+            // Almacenar los archivos cargados en un directorio fuera del directorio web
+            $uploadPath = "/path/to/uploads/".$fileName;
     
             if( @move_uploaded_file($tmpName,$uploadPath) ){
                 $status = "success";
