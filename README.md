@@ -24,7 +24,7 @@
 * Cross Site Request Forgery (CSRF) (Marc)
 * XML External Entity (XXE) ✅
 * Insecure Deserialization
-* File Upload (Mario)
+* File Upload ✅
 * File Inclusion ✅ xd
 * Broken Authentication ✅/falta 1
 * Race Condition ✅
