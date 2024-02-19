@@ -19,14 +19,14 @@
 ## Vulnerabilities
 * SQL Injection ✅
 * Cross Site Scripting (XSS) ✅
-* Command Injection
+* Command Injection (ferran)
 * Insecure Direct Object References (IDOR)
 * Cross Site Request Forgery (CSRF)
 * XML External Entity (XXE) ✅
 * Insecure Deserialization
 * File Upload (Mario)
 * File Inclusion (Marc)
-* Broken Authentication (Ferran)
+* Broken Authentication ✅/falta 1
 * Race Condition ✅
 * Server Side Template Injection (SSTI) (Adrià)
 
