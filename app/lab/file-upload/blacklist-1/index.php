@@ -11,24 +11,25 @@
 
             $fileExt = pathinfo($fileName)['extension'];
             $extensions = array("php");
-    
+            $allowedMimeTypes = array("image/jpeg", "image/png", "image/gif");
+            $maxFileSize = 10 * 1024 * 1024; // 10 MB
+
             if(!file_exists("uploads")){
                 mkdir("uploads");
             }
     
             $uploadPath = "uploads/".$fileName;
     
-            if( !in_array($fileExt,$extensions) && trim($fileName) != ".htaccess"){
-    
+            $fileMimeType = mime_content_type($tmpName);
+            if (!in_array($fileMimeType, $allowedMimeTypes) || $_FILES['input_image']['size'] > $maxFileSize || substr($fileName, 0, 1) === '.' || !in_array($fileExt, $extensions)) {
+                $status = "blocked";
+            } else {
                 if( @move_uploaded_file($tmpName,$uploadPath) ){
                     $status = "success";
                     
                 }else{
                     $status = "unsuccess";
                 }
-    
-            }else{
-                $status = "blocked";
             }
 
         }else{
