@@ -6,30 +6,29 @@
 
         $tmpName = $_FILES['input_image']['tmp_name'];
         $fileName = $_FILES['input_image']['name'];
+        $fileType = $_FILES['input_image']['type']; //MIME Type
 
         if(!empty($fileName)){
-            $fileType = $_FILES['input_image']['type']; //MIME Type
-        
-            $extensions = array("php");
-    
+            
+            $allowedMimeTypes = array("image/jpeg", "image/png", "image/gif");
+            $maxFileSize = 10 * 1024 * 1024; // 10 MB
+            $uploadPath = "uploads/" . uniqid() . '.' . pathinfo($fileName)['extension'];
+
             if(!file_exists("uploads")){
                 mkdir("uploads");
             }
-            
-            $uploadPath = "uploads/".$fileName;
-    
-            if( $fileType == "image/gif" || $fileType == "image/jpeg" || $fileType == "image/png"){
-    
+
+            if (!in_array($fileType, $allowedMimeTypes) || $_FILES['input_image']['size'] > $maxFileSize) {
+                $status = "blocked";
+            } else {
                 if( @move_uploaded_file($tmpName,$uploadPath) ){
                     $status = "success";
                     
                 }else{
                     $status = "unsuccess";
                 }
-    
-            }else{
-                $status = "blocked";
             }
+
         }else{
             $status = "empty";
         }
