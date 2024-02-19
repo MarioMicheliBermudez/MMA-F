@@ -6,30 +6,28 @@
 
         $tmpName = $_FILES['input_image']['tmp_name'];
         $fileName = $_FILES['input_image']['name'];
+        $fileExt = pathinfo($fileName)['extension'];
 
         if(!empty($fileName)){
             
-            $extensions = array("php","php1","php2","php3","php4","php5","php6","php7","php8","pht","phtm","phar","phps","html","htm","shtml","phtml","sh","ini","css","js"); //blacklist
+            $allowedMimeTypes = array("image/jpeg", "image/png", "image/gif");
+            $maxFileSize = 10 * 1024 * 1024; // 10 MB
+            $uploadPath = "uploads/" . uniqid() . '.' . $fileExt;
 
-            $fileExt = pathinfo($fileName)['extension'];
-    
             if(!file_exists("uploads")){
                 mkdir("uploads");
             }
-            
-            $uploadPath = "uploads/".$fileName;
-    
-            if( !in_array(strtolower($fileExt),$extensions) ){
-    
+
+            $fileMimeType = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $tmpName);
+            if (!in_array($fileMimeType, $allowedMimeTypes) || $_FILES['input_image']['size'] > $maxFileSize || substr($fileName, 0, 1) === '.' || !in_array(strtolower($fileExt), $extensions)) {
+                $status = "blocked";
+            } else {
                 if( @move_uploaded_file($tmpName,$uploadPath) ){
                     $status = "success";
                     
                 }else{
                     $status = "unsuccess";
                 }
-    
-            }else{
-                $status = "blocked";
             }
 
         }else{
