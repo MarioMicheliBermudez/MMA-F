@@ -6,28 +6,28 @@
 
         $tmpName = $_FILES['input_image']['tmp_name'];
         $fileName = $_FILES['input_image']['name'];
+        $fileExt = pathinfo($fileName)['extension'];
 
         if(!empty($fileName)){
+            
+            $allowedMimeTypes = array("image/jpeg", "image/png", "image/gif");
+            $maxFileSize = 10 * 1024 * 1024; // 10 MB
+            $uploadPath = "uploads/" . uniqid() . '.' . $fileExt;
 
-            $extensions = array("php");
-        
             if(!file_exists("uploads")){
                 mkdir("uploads");
             }
-    
-            $uploadPath = "uploads/".$fileName;
-            
-            if( mime_content_type($tmpName) == "image/gif" || mime_content_type($tmpName) == "image/png" || mime_content_type($tmpName) == "image/jpeg" ){
-    
+
+            $fileMimeType = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $tmpName);
+            if (!in_array($fileMimeType, $allowedMimeTypes) || $_FILES['input_image']['size'] > $maxFileSize || substr($fileName, 0, 1) === '.' || !in_array(strtolower($fileExt), $extensions)) {
+                $status = "blocked";
+            } else {
                 if( @move_uploaded_file($tmpName,$uploadPath) ){
                     $status = "success";
                     
                 }else{
                     $status = "unsuccess";
                 }
-    
-            }else{
-                $status = "blocked";
             }
 
         }else{
@@ -35,9 +35,7 @@
         }
 
 
-
     }
-
 
 ?>
 
