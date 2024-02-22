@@ -20,7 +20,7 @@
 * SQL Injection ✅
 * Cross Site Scripting (XSS) ✅
 * Command Injection (ferran)
-* Insecure Direct Object References (IDOR)
+* Insecure Direct Object References (IDOR) (Mario)
 * Cross Site Request Forgery (CSRF) (Marc)
 * XML External Entity (XXE) ✅
 * Insecure Deserialization
