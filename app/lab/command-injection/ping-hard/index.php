@@ -1,7 +1,11 @@
 <?php
-require("../../../lang/lang.php");
+require_once("../../../lang/lang.php");
 
 $strings = tr();
+
+function isValidIP($ip) {
+    return filter_var($ip, FILTER_VALIDATE_IP) !== false;
+}
 
 ?>
 <!DOCTYPE HTML>
@@ -32,28 +36,16 @@ $strings = tr();
 			<?php
 			if (isset($_POST["ip"])) {
 				$input = $_POST["ip"];
-				$blacklists = array(" ", "&", ";", "@", "%", "^", "'", "<", ">", ",", "\\", "/", "ls", "cat", "less", "tail", "more", "whoami", "pwd", "echo", "ps");
-				$arraySize = sizeof($blacklists);
-				$status = 0;
 
-				foreach ($blacklists as $blacklist) {
-					if (!strstr($input, $blacklist)) {
-						//$input = str_replace($blacklist,"", $input);
-						$status++;
-					}
-				}
-				if ($arraySize == $status) {
-					exec("ping -c5 $input", $out);
-					if (!empty($out)) {
+				if (isValidIP($input)) {
+					$output = shell_exec("ping -c5 $input");
+					if (!empty($output)) {
 						echo '<div class="mt-5 alert alert-primary" role="alert" style=" width:500px;" > <strong>  <p style="text-align:center;">';
-						foreach ($out as $line) {
-							echo $line;
-							echo "<br>";
-						}
+						echo nl2br($output);
 						echo ' </p></strong></div>';
 					}
 				} else {
-					echo '<div class="mt-5 alert alert-danger" role="alert" style=" width:500px;" > <strong>  <p style="text-align:center;">ERROR</p></strong></div>';
+					echo '<div class="mt-5 alert alert-danger" role="alert" style=" width:500px;" > <strong>  <p style="text-align:center;">Invalid IP Address</p></strong></div>';
 				}
 			}
 			?>
