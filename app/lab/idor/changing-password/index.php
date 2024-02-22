@@ -1,43 +1,52 @@
 <?php
 
-    require("../../../lang/lang.php");
-    $strings = tr();
+require("../../../lang/lang.php");
+$strings = tr();
 
-    $db = new PDO('sqlite:database.db');    
+$db = new PDO('sqlite:database.db');    
 
-    $user_id = 1;
+$user_id = 1;
 
-    $query = $db -> prepare("SELECT * FROM idor_changing_password WHERE id=:user_id");
-    $query -> execute(array(
+$query = $db -> prepare("SELECT * FROM idor_changing_password WHERE id=:user_id");
+$query -> execute(array(
+    'user_id' => $user_id
+));
+$user_info = $query -> fetch();
+$your_username = $user_info['username'];
+
+if( isset($_POST['password']) ){
+
+    // Validar y filtrar el valor de $_POST['user_id']
+    $user_id = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+    if ($user_id === false || $user_id <= 0) {
+        // El valor de $_POST['user_id'] no es un número entero positivo válido
+        // Puedes mostrar un mensaje de error o redirigir al usuario a una página de error
+        header("Location: error.php");
+        exit;
+    }
+
+    $query2 = $db -> prepare("SELECT * FROM idor_changing_password WHERE id=:user_id");
+    $query2 -> execute(array(
         'user_id' => $user_id
     ));
-    $user_info = $query -> fetch();
-    $your_username = $user_info['username'];
+    $_user_info = $query2 -> fetch();; 
+    $changed_pass_username = $_user_info['username']; 
 
-    if( isset($_POST['password']) ){
-
-        $query2 = $db -> prepare("SELECT * FROM idor_changing_password WHERE id=:user_id");
-        $query2 -> execute(array(
-            'user_id' => $_POST['user_id']
-        ));
-        $_user_info = $query2 -> fetch();; 
-        $changed_pass_username = $_user_info['username']; 
-
-        $new_password = $_POST['password'];
-        
-        $query3 = $db -> prepare("UPDATE idor_changing_password SET password=:new_password WHERE id=:user_id ");
-        $update = $query3 -> execute(array(
-            'user_id' => $_POST['user_id'],
-            'new_password' => $new_password
-        ));
-
-        if($update){
-            $message1 = '<div class="alert alert-success" role="alert"> <b>'.$strings['alert_success'].'</b> <br> <hr>'
-            .'<b>'.$changed_pass_username.'</b>'.$strings['success_username'].'<br>'
-            .'</div>';
-        }
+    $new_password = $_POST['password'];
     
+    $query3 = $db -> prepare("UPDATE idor_changing_password SET password=:new_password WHERE id=:user_id ");
+    $update = $query3 -> execute(array(
+        'user_id' => $user_id,
+        'new_password' => $new_password
+    ));
+
+    if($update){
+        $message1 = '<div class="alert alert-success" role="alert"> <b>'.$strings['alert_success'].'</b> <br> <hr>'
+        .'<b>'.$changed_pass_username.'</b>'.$strings['success_username'].'<br>'
+        .'</div>';
     }
+
+}
 
 
 ?>
@@ -109,5 +118,3 @@
     <script id="VLBar" title="<?= $strings['title']; ?>" category-id="3" src="/public/assets/js/vlnav.min.js"></script>
 </body>
 </html>
-
-
