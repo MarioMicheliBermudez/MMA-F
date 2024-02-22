@@ -20,7 +20,7 @@
             
         }else{
 
-            $total = (int)$_POST['ticket_money']*(int)$_POST['amount'];
+            $total = (int)$_POST['amount']*(int)$_POST['amount'];
 
             if($total < 0){
                 $total = -1 * $total;
@@ -29,7 +29,7 @@
             if( $account['money'] >= $total ){
                 $money_in_account = $money_in_account - $total;
     
-                $query2 = $db -> prepare("UPDATE idor_buy_tickets SET money=:new_money WHERE id=1");
+                $query2 = $db -> prepare("UPDATE idor_buy_tickets SET money=:money WHERE id=1");
                 $update = $query2 -> execute(array(
                     'new_money' => $money_in_account
                 ));
