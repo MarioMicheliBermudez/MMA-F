@@ -43,9 +43,18 @@
 
         }else{
 
+            // Validar y filtrar el valor de $_POST['addressID']
+            $addressID = filter_input(INPUT_POST, 'addressID', FILTER_VALIDATE_INT);
+            if ($addressID === false || $addressID <= 0) {
+                // El valor de $_POST['addressID'] no es un número entero positivo válido
+                // Puedes mostrar un mensaje de error o redirigir al usuario a una página de error
+                header("Location: error.php");
+                exit;
+            }
+
             $query = $db -> prepare("SELECT * FROM idor_address_entry WHERE id=:id");
             $query -> execute(array(
-                'id' => $_POST['addressID']
+                'id' => $addressID
             ));
             $order_address = $query -> fetch();
 
@@ -149,5 +158,3 @@
     
 </body>
 </html>
-
-
