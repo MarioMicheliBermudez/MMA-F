@@ -1,27 +1,36 @@
 <?php
 
-    require("../../../lang/lang.php");
-    $strings = tr();
+require("../../../lang/lang.php");
+$strings = tr();
 
-    $db = new PDO('sqlite:database.db'); 
+$db = new PDO('sqlite:database.db'); 
 
-    $user_id = 1;
+$user_id = 1;
 
-    if( isset($_POST['view']) ){
-        header("Location: index.php?invoice_id=$user_id");
+if( isset($_POST['view']) ){
+    header("Location: index.php?invoice_id=$user_id");
+}
+
+if( isset($_GET['invoice_id']) ){ 
+    // Validar y filtrar el valor de $_GET['invoice_id']
+    $invoice_id = filter_input(INPUT_GET, 'invoice_id', FILTER_VALIDATE_INT);
+    if ($invoice_id === false || $invoice_id <= 0) {
+        // El valor de $_GET['invoice_id'] no es un número entero positivo válido
+        // Puedes mostrar un mensaje de error o redirigir al usuario a una página de error
+        header("Location: error.php");
+        exit;
     }
 
-    if( isset($_GET['invoice_id']) ){ 
-        $query = $db -> prepare("SELECT * FROM idor_invoices WHERE id=:id");
-        $query -> execute(array(
-            'id' => $_GET['invoice_id']
-        ));
-        $row = $query -> fetch();
+    $query = $db -> prepare("SELECT * FROM idor_invoices WHERE id=:id");
+    $query -> execute(array(
+        'id' => $invoice_id
+    ));
+    $row = $query -> fetch();
 
-        header("Content-type: application/pdf");
-        header("Content-Disposition: inline; filename=invoice.pdf");
-        @readfile($row['file_url']);
-    }
+    header("Content-type: application/pdf");
+    header("Content-Disposition: inline; filename=invoice.pdf");
+    @readfile($row['file_url']);
+}
 
 
 ?>
@@ -81,5 +90,3 @@
     <script id="VLBar" title="<?= $strings['title']; ?>" category-id="3" src="/public/assets/js/vlnav.min.js"></script>
 </body>
 </html>
-
-
