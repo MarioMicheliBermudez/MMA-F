@@ -13,13 +13,15 @@ $cookiepath = "/";
 ob_start();
 session_start();
 
+// Validar que el usuario tiene permiso para acceder al perfil
 if (isset($_COOKIE['userid'])) {
     $userid = $_COOKIE['userid'];
     $control = 1;
     setcookie("userid", "", time() - 3600, "$cookiepath");
 } else {
-    $userid = 3;
-    $control = 0;
+    // Si el usuario no tiene permiso, redirigirlo a una página de error o a la página de inicio de sesión
+    header("Location: /login.php");
+    exit();
 }
 
 $query = $db->prepare("SELECT * FROM profiles WHERE id=?");
