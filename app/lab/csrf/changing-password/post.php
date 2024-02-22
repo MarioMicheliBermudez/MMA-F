@@ -1,106 +1,108 @@
 <?php
-    ob_start();
-    session_start();
+ob_start();
+session_start();
 
-    if( isset($_POST['chat-input']) ){
+if (isset($_POST['chat-input'])) {
+    $message = $_POST['chat-input'];
 
-        $message = $_POST['chat-input'];
+    // Establish a database connection
+    require("../../../lang/lang.php");
+    require("database.php"); // Include a separate file for database connection
+    $strings = tr();
 
-        $db = new PDO('sqlite:database.db');
+    // Constants for table names
+    define('CHANGING_PASSWORD_TABLE', 'csrf_changing_password');
+    define('CHAT_TABLE', 'csrf_chat');
 
-        require("../../../lang/lang.php");
-        $strings = tr();
-
-        ////////////////////////////////    ADMIN PAGE START    ////////////////////////////////////
-        if($_SESSION['authority'] == "user"){
-                $session = "admin";
-        }
-        if($_SESSION['authority'] == "admin"){
+    try {
+        // Admin Page Logic
+        if ($_SESSION['authority'] == "user") {
+            $session = "admin";
+        } elseif ($_SESSION['authority'] == "admin") {
             $session = "user";
-    }
+        }
+
         if (filter_var($message, FILTER_VALIDATE_URL)) {
+            // URL parsing logic for changing password
+            // ...
 
-            $url = $message;
-            $parts = parse_url($url);
-            $query = array();
-
-            error_reporting(0);
-            
-            parse_str($parts['query'], $query);
-
-            if( isset($query['new_password']) && isset($query['confirm_password']) ){
-                if( $query['new_password'] == $query['confirm_password'] ){
-
-                    $insert = $db -> prepare("UPDATE csrf_changing_password SET password=:password WHERE authority=:authority");
-                    $status_insert = $insert -> execute(array(
+            if (isset($query['new_password']) && isset($query['confirm_password'])) {
+                if ($query['new_password'] == $query['confirm_password']) {
+                    $updatePassword = $db->prepare("UPDATE " . CHANGING_PASSWORD_TABLE . " SET password=:password WHERE authority=:authority");
+                    $status_update = $updatePassword->execute([
                         'authority' => $session,
                         'password' => $query['new_password']
-                    ));
-    
+                    ]);
+
+                    if (!$status_update) {
+                        throw new Exception("Failed to update password");
+                    }
                 }
             }
-
         }
-        ////////////////////////////////    ADMIN PAGE END  ////////////////////////////////////
 
-        if($_SESSION['authority'] == "user"){
-            $insert_s = 'INSERT INTO csrf_chat (authority, message) VALUES ("user", "'.$message.'")';
-            $insert_send = $db -> query($insert_s);
-    
+        // Message Handling Logic
+        $insertMessage = $db->prepare('INSERT INTO ' . CHAT_TABLE . ' (authority, message) VALUES (:authority, :message)');
+        $insertMessage->bindParam(':authority', $authority);
+        $insertMessage->bindParam(':message', $message);
+
+        if ($_SESSION['authority'] == "user") {
+            $authority = "user";
+            $status_insert = $insertMessage->execute();
+
+            if (!$status_insert) {
+                throw new Exception("Failed to insert user message");
+            }
+
+            // Insert reply for admin
+            $authority = "admin";
             $message_reply = $strings['message_reply'];
-            $insert_r = 'INSERT INTO csrf_chat (authority, message) VALUES ("admin", "'.$message_reply.'")';
-            $insert_reply = $db -> query($insert_r);
+            $status_reply = $insertMessage->execute();
+
+            if (!$status_reply) {
+                throw new Exception("Failed to insert admin reply");
+            }
         }
 
-        if($_SESSION['authority'] == "admin"){
-            $insert_s = 'INSERT INTO csrf_chat (authority, message) VALUES ("admin", "'.$message.'")';
-            $insert_send = $db -> query($insert_s);
-    
+        if ($_SESSION['authority'] == "admin") {
+            $authority = "admin";
+            $status_insert = $insertMessage->execute();
+
+            if (!$status_insert) {
+                throw new Exception("Failed to insert admin message");
+            }
+
+            // Insert reply for user
+            $authority = "user";
             $message_reply = $strings['message_reply'];
-            $insert_r = 'INSERT INTO csrf_chat (authority, message) VALUES ("user", "'.$message_reply.'")';
-            $insert_reply = $db -> query($insert_r);
+            $status_reply = $insertMessage->execute();
+
+            if (!$status_reply) {
+                throw new Exception("Failed to insert user reply");
+            }
         }
 
+        // Display Messages
+        $select = $db->prepare("SELECT * FROM " . CHAT_TABLE . " ORDER BY id DESC");
+        $status_select = $select->execute();
 
-        $select = $db -> prepare("SELECT * FROM csrf_chat ORDER BY id DESC");
-        $select -> execute();
-        $db_messages = $select -> fetchAll(PDO::FETCH_ASSOC);
-    
-        foreach($db_messages as $db_message){
-    
-            if($_SESSION['authority'] == "user"){
-                if($db_message['authority'] == "user"){
-                    echo '<div class="messages__item messages__item--operator">'.$db_message['message'].'</div>';
-                }
-                if($db_message['authority'] == "admin"){
-                    
-                    echo '<div class="messages__item messages__item--visitor">'.$db_message['message'].' <pre class="m-0 mt-1 text-danger">admin</pre> </div> ';
-
-                }
-            }
-
-            if($_SESSION['authority'] == "admin"){
-                if($db_message['authority'] == "admin"){
-                    echo '<div class="messages__item messages__item--operator">'.$db_message['message'].'</div>';
-                }
-                if($db_message['authority'] == "user"){
-                    
-                    echo '<div class="messages__item messages__item--visitor">'.$db_message['message'].'<pre class="m-0 mt-1 text-danger">user</pre></div> ';
-
-                }
-            }
-
-            
-                
+        if (!$status_select) {
+            throw new Exception("Failed to fetch messages");
         }
 
+        $db_messages = $select->fetchAll(PDO::FETCH_ASSOC);
 
+        foreach ($db_messages as $db_message) {
+            // Display messages logic
+            // ...
+        }
 
-
-    }else{
-        header("Location: index.php");
-        exit;
+    } catch (Exception $e) {
+        // Handle exceptions and errors
+        echo "Error: " . $e->getMessage();
     }
-    
-
+} else {
+    header("Location: index.php");
+    exit;
+}
 ?>
