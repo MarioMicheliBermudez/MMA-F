@@ -22,11 +22,14 @@ $strings = tr();
             <?php
             if (isset($_GET['name'])) {
                 $name = $_GET['name'];
-                $name = htmlspecialchars($name);
-
-                $t = "'";
-                echo '<h2> ' . $name . '' . $t . 's </h2>';
+                // Validar el nombre para asegurar que solo contenga caracteres seguros
+                if (preg_match("/^[a-zA-Z ]*$/", $name)) {
+                    echo '<h2>' . htmlspecialchars($name) . '\'s</h2>';
+                } else {
+                    echo '<h2>Invalid Name</h2>';
+                }
             }
+            
             ?>
         </div>
         <div class="img">
