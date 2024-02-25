@@ -19,12 +19,19 @@ if(isset($_POST["submit"])) {
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
     // Check if image file is a actual image or fake image
-    $check = getimagesize($_FILES["image"]["tmp_name"]);
-    if($check !== false) {
-        $uploadOk = 1;
-    } else {
-        $uploadOk = 0;
+    if(isset($_POST["submit"])) {
+        // Verificar si el archivo es una imagen real
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        $allowed_types = array(IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF);
+        $detected_type = exif_imagetype($_FILES["image"]["tmp_name"]);
+        if($check !== false && in_array($detected_type, $allowed_types)) {
+            $uploadOk = 1;
+        } else {
+            $uploadOk = 0;
+            echo "El archivo no es una imagen válida.";
+        }
     }
+    
     
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
     && $imageFileType != "gif" ) {
