@@ -1,13 +1,10 @@
 <?php
 require("../../../lang/lang.php");
 $strings = tr();
-function encodeB($char){
 
-    $replace = array(urlencode("<"),urlencode(">"));
-    $char=str_replace("<",urlencode("<"), $char);
-    $encoded=str_replace(">",urlencode(">"), $char);
-    return $encoded;
-
+function encodeB($char) {
+    // Esta función no es necesaria si utilizas htmlspecialchars() correctamente
+    return htmlspecialchars($char);
 }
 ?>
 <!doctype html>
@@ -31,23 +28,23 @@ function encodeB($char){
                 <h3><?php echo $strings['text']; ?></h3>
                 <form action="#" method="get" class="row justify-content-center" style="margin: 2vh 0vh 6vh 0vh;">
                     <div class="col-md-10 button-con row justify-content-evenly ">
-                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="1"><?php echo $strings['image']; ?></button>
-                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="2"><?php echo $strings['image']; ?></button>
-                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="3"><?php echo $strings['image']; ?></button>
-                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="4"><?php echo $strings['image']; ?></button>
+                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="1"><?php echo htmlspecialchars($strings['image']); ?></button>
+                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="2"><?php echo htmlspecialchars($strings['image']); ?></button>
+                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="3"><?php echo htmlspecialchars($strings['image']); ?></button>
+                        <button class="col-md-2 btn btn-primary" type="submit" name="img" value="4"><?php echo htmlspecialchars($strings['image']); ?></button>
                     </div>
                 </form>
             </div>
             <div class="bottom justify-content-center" style="text-align: center;">
                 <?php
                 if (isset($_GET['img'])) {
-                    echo '<img class="shadow-lg bg-body rounded" style="width:500px;padding : 0; margin-bottom: 0;" src="' . encodeB($_GET['img']) . '.jpg"/>';
+                    echo '<img class="shadow-lg bg-body rounded" style="width:500px;padding : 0; margin-bottom: 0;" src="' . htmlspecialchars($_GET['img']) . '.jpg"/>';
                 }
                 ?>
             </div>
         </div>
     </div>
-    <script id="VLBar" title="<?= $strings['title'] ?>" category-id="1" src="/public/assets/js/vlnav.min.js"></script>
+    <script id="VLBar" title="<?= htmlspecialchars($strings['title']); ?>" category-id="1" src="/public/assets/js/vlnav.min.js"></script>
 </body>
 
 </html>
