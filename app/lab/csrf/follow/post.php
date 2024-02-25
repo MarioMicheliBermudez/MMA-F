@@ -1,77 +1,78 @@
 <?php
+session_start();
 
-    if( isset($_POST['chat-input']) ){
+if (isset($_POST['chat-input'])) {
 
-        $message = $_POST['chat-input'];
+    $message = $_POST['chat-input'];
 
-        $db = new PDO('sqlite:database.db');
+    $db = new PDO('sqlite:database.db');
 
-        ////////////////////////////////    ADMIN PAGE START    ////////////////////////////////////
+    // Manejo de sesiones
+    $_SESSION['authority'] = "admin";
 
-        $_SESSION['authority'] = "admin";
+    require("../../../lang/lang.php");
+    $strings = tr();
 
-        require("../../../lang/lang.php");
-        $strings = tr();
-        
-        if (filter_var($message, FILTER_VALIDATE_URL)) {
+    ////////////////////////////////    ADMIN PAGE START    ////////////////////////////////////
 
-            $url = $message;
-            $parts = parse_url($url);
-            $query = array();
+    // Validar la URL
+    if (filter_var($message, FILTER_VALIDATE_URL)) {
 
-            error_reporting(0);
-            
-            parse_str($parts['query'], $query);
+        $url = $message;
+        $parts = parse_url($url);
+        $query = array();
 
-            if( isset($query['follow']) ){
+        // No suprimir los errores durante el desarrollo
+        parse_str($parts['query'], $query);
 
-                $selectUser = $db -> prepare("SELECT * FROM csrf_follow WHERE authority=:authority");
-                $selectUser -> execute(array('authority' => $_SESSION['authority']));
-                $selectUser_Info = $selectUser -> fetch();
+        if (isset($query['follow'])) {
 
-                if( $selectUser_Info['follow_status'] == "false" ){
+            // Utilizar consultas preparadas y validar/sanitizar la entrada del usuario
+            $selectUser = $db->prepare("SELECT * FROM csrf_follow WHERE authority=:authority");
+            $selectUser->execute(array('authority' => $_SESSION['authority']));
+            $selectUser_Info = $selectUser->fetch();
 
-                    $follow_update = $db -> prepare("UPDATE csrf_follow SET follow_status=:follow_status WHERE authority=:authority");
-                    $status_follow_update = $follow_update -> execute(array(
-                        'authority' => $_SESSION['authority'],
-                        'follow_status' => 'true'
-                    ));        
-        
-                }
+            if ($selectUser_Info && $selectUser_Info['follow_status'] == "false") {
+
+                // Utilizar consultas preparadas para la actualización
+                $follow_update = $db->prepare("UPDATE csrf_follow SET follow_status=:follow_status WHERE authority=:authority");
+                $status_follow_update = $follow_update->execute(array(
+                    'authority' => $_SESSION['authority'],
+                    'follow_status' => 'true'
+                ));
             }
-
-
         }
-        ////////////////////////////////    ADMIN PAGE END  ////////////////////////////////////
-
-        
-        $insert_s = 'INSERT INTO csrf_chat (authority, message) VALUES ("user", "'.$message.'")';
-        $insert_send = $db -> query($insert_s);
-    
-        $message_reply = $strings['message_reply'];
-        $insert_r = 'INSERT INTO csrf_chat (authority, message) VALUES ("admin", "'.$message_reply.'")';
-        $insert_reply = $db -> query($insert_r);
-        
-        $select = $db -> prepare("SELECT * FROM csrf_chat ORDER BY id DESC");
-        $select -> execute();
-        $db_messages = $select -> fetchAll(PDO::FETCH_ASSOC);
-    
-        foreach($db_messages as $db_message){
-    
-            if($db_message['authority'] == "user"){
-                echo '<div class="messages__item messages__item--operator">'.$db_message['message'].'</div>';
-            }
-            if($db_message['authority'] == "admin"){
-                echo '<div class="messages__item messages__item--visitor">'.$db_message['message'].' <pre class="m-0 mt-1 text-danger">admin</pre> </div> ';
-            }
-                
-        }
-
-
-    }else{
-        header("Location: index.php");
-        exit;
     }
-    
+    ////////////////////////////////    ADMIN PAGE END  ////////////////////////////////////
 
+    // Utilizar consultas preparadas y validar/sanitizar la entrada del usuario
+    $insert_s = $db->prepare('INSERT INTO csrf_chat (authority, message) VALUES (?, ?)');
+    $insert_send = $insert_s->execute(array("user", $message));
+
+    $message_reply = $strings['message_reply'];
+    // Utilizar consultas preparadas y validar/sanitizar la entrada del usuario
+    $insert_r = $db->prepare('INSERT INTO csrf_chat (authority, message) VALUES (?, ?)');
+    $insert_reply = $insert_r->execute(array("admin", $message_reply));
+
+    // Utilizar consultas preparadas y ordenar por ID
+    $select = $db->prepare("SELECT * FROM csrf_chat ORDER BY id DESC");
+    $select->execute();
+    $db_messages = $select->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($db_messages as $db_message) {
+        // Escapar datos de salida para prevenir ataques XSS
+        $escaped_message = htmlspecialchars($db_message['message'], ENT_QUOTES, 'UTF-8');
+
+        if ($db_message['authority'] == "user") {
+            echo '<div class="messages__item messages__item--operator">' . $escaped_message . '</div>';
+        }
+        if ($db_message['authority'] == "admin") {
+            echo '<div class="messages__item messages__item--visitor">' . $escaped_message . '<pre class="m-0 mt-1 text-danger">admin</pre> </div> ';
+        }
+    }
+
+} else {
+    header("Location: index.php");
+    exit;
+}
 ?>
