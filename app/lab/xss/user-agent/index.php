@@ -13,15 +13,9 @@ if (isset($_POST['uname']) && isset($_POST['passwd'])) {
     ));
     $_select = $q -> fetch();
     
-    if ( isset($_select['id'])) {
-
-        session_start();
+    if ($_select) { // Verifica si se encontraron resultados en la consulta
         $_SESSION['username'] = $_POST['uname'];
-
-
-
         header("Location: user_agent_stored.php");
-
         exit;
     } else {
         echo '<h1>wrong username or pass</h1>';

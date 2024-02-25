@@ -31,7 +31,7 @@ if(isset($_POST["submit"])) {
             echo "El archivo no es una imagen válida.";
         }
     }
-    
+
     
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
     && $imageFileType != "gif" ) {
