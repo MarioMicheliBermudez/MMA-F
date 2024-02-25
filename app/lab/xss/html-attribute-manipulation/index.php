@@ -2,9 +2,7 @@
 require("../../../lang/lang.php");
 $strings = tr();
 function encodeB($char){
-    $replace = array(urlencode("<"),urlencode(">"));
-    $char=str_replace("<",urlencode("<"), $char);
-    $encoded=str_replace(">",urlencode(">"), $char);
+    $encoded = htmlspecialchars($char, ENT_QUOTES, 'UTF-8');
     return $encoded;
 }
 ?>
