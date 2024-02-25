@@ -18,7 +18,7 @@
 <!-- Vulnerabilities List -->
 ## Vulnerabilities
 * SQL Injection ✅
-* Cross Site Scripting (XSS) ✅
+* Cross Site Scripting (XSS) ✅✅
 * Command Injection (ferran)
 * Insecure Direct Object References (IDOR) (Mario)
 * Cross Site Request Forgery (CSRF) (Marc)
