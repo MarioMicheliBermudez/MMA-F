@@ -5,6 +5,7 @@ $strings = tr();
 $db = new PDO('sqlite:database.db');
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,12 +16,12 @@ $db = new PDO('sqlite:database.db');
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
-    <title><?php echo $strings['title']; ?></title>
+    <title><?php echo htmlspecialchars($strings['title']); ?></title>
 </head>
 
 <body>
     <div class="alert alert-primary d-flex justify-content-center" style="text-align: center;width: fit-content;margin: auto;margin-top: 3vh;">
-        <h6><?php echo $strings['text']; ?></h6>
+        <h6><?php echo htmlspecialchars($strings['text']); ?></h6>
     </div>
     <div class="container d-flex justify-content-center">
         <div class="wrapper col-md-6  shadow-lg" style="border-radius: 15px; margin-top: 4vh;">
@@ -42,24 +43,22 @@ $db = new PDO('sqlite:database.db');
                     while ($cikti = $q->fetch(PDO::FETCH_ASSOC)) {
 
                         echo '<div class="msg col-md-6 m-3 px-4 bg-primary text-wrap " style="border-radius: 20px; padding: 5px;width: fit-content;color: aliceblue;">';
-                        echo $cikti['content'];
+                        echo htmlspecialchars($cikti['content']); // Escapar el contenido antes de imprimirlo
                         echo '</div>';
                     }
                 }
-                #}
-
                 ?>
             </div>
             <div class="p-3 pb-0" style="text-align: center;">
                 <form action="#" method="POST" style="margin: 0;">
-                    <textarea placeholder="<?php echo $strings['message']; ?>" class="form-control" rows="3" name="mes"></textarea>
-                    <button type="submit" class="btn btn-primary m-3"><?php echo $strings['submit']; ?></button>
+                    <textarea placeholder="<?php echo htmlspecialchars($strings['message']); ?>" class="form-control" rows="3" name="mes"></textarea>
+                    <button type="submit" class="btn btn-primary m-3"><?php echo htmlspecialchars($strings['submit']); ?></button>
                 </form>
             </div>
         </div>
     </div>
     <form action="#" method="post">
-        <button type="submit" name="del" class="btn btn-primary m-3"><?php echo $strings['delete']; ?></button>
+        <button type="submit" name="del" class="btn btn-primary m-3"><?php echo htmlspecialchars($strings['delete']); ?></button>
     </form>
 
     <?php
@@ -83,7 +82,7 @@ $db = new PDO('sqlite:database.db');
 
     ?>
     </div>
-    <script id="VLBar" title="<?= $strings['title'] ?>" category-id="1" src="/public/assets/js/vlnav.min.js"></script>
+    <script id="VLBar" title="<?= htmlspecialchars($strings['title']); ?>" category-id="1" src="/public/assets/js/vlnav.min.js"></script>
 </body>
 
 </html>
