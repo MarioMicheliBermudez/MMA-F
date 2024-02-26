@@ -1,38 +1,42 @@
 <?php
-// Incluir las funciones de validación necesarias
+// Include necessary validation functions
 require_once("../../../lang/lang.php");
 
-// Función para escapar la salida HTML
+// Function to escape HTML output
 function h($string) {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
-// Obtener las cadenas traducidas
+// Get translated strings
 $strings = tr();
 
-// Definir una lista blanca de comandos permitidos
+// Define a whitelist of allowed commands
 $allowed_commands = array("ping");
 
-// Inicializar la variable para almacenar el resultado del ping
+// Initialize variable to store ping result
 $ping_result = '';
 
-// Procesar el formulario si se envió
+// Process the form if submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener la IP del formulario y validarla
+    // Get and validate the IP from the form
     $input_ip = $_POST["ip"];
     if (filter_var($input_ip, FILTER_VALIDATE_IP)) {
-        // Ejecutar el comando ping si la IP es válida y está en la lista blanca
+        // Execute the ping command if IP is valid and in whitelist
         if (in_array("ping", $allowed_commands)) {
-            exec("ping -n 3 " . escapeshellarg($input_ip), $ping_output);
+            // Escaping the input before using in the command
+            $escaped_ip = escapeshellarg($input_ip);
+            // Using command safely
+            exec("ping -c 3 " . $escaped_ip, $ping_output);
             $ping_result = implode("<br>", $ping_output);
         } else {
-            $ping_result = "El comando ping no está permitido.";
+            $ping_result = "Ping command is not allowed.";
         }
     } else {
-        $ping_result = "Dirección IP no válida.";
+        $ping_result = "Invalid IP address.";
     }
 }
 ?>
+<!DOCTYPE HTML>
 <html lang="en-US">
 <head>
     <meta charset="UTF-8">
@@ -62,3 +66,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <script id="VLBar" title="Title" category-id="4" src="/public/assets/js/vlnav.min.js"></script>
 </body>
 </html>
+
